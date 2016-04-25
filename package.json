@@ -1,5 +1,5 @@
 {
-  "name": "logger",
+  "name": "bi-logger",
   "version": "1.0.0",
   "description": "handles default logging of errors/exceptions into log files",
   "main": "index.js",
