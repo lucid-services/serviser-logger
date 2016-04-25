@@ -17,7 +17,7 @@ Adding into project (`package.json`):
 
 Example use:
 ```js
-    var fileLog = require('bi-logger').getInstance();
+    var fileLog = require('bi-logger');
     //...do stuff
     fileLog.error('error');
 ```
