@@ -1,3 +1,9 @@
+/*
+ * bi-logger: file logger module
+ *
+ * (C) 2016 Bohemia Interactive
+ *
+ */
 var winston = require('winston');
 var exception = require('winston').exception;
 var path = require('path');
