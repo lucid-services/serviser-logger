@@ -35,7 +35,7 @@ export LOGS_DIR=/absolute/path/to/custom/logs/dir
 _Note: env. var should point to absolute location of logs directory.
  Example: /home/user1/dev/my_project01/logs_
 
-**loggerObject.error(_MESSAGE_)**
+[DEPRECATED ]**loggerObject.error(_MESSAGE_)**
 Standard error log level handler.
 
 
