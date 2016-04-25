@@ -1,0 +1,28 @@
+{
+  "name": "logger",
+  "version": "1.0.0",
+  "description": "handles default logging of errors/exceptions into log files",
+  "main": "index.js",
+  "scripts": {
+    "test": "tests.sh"
+  },
+  "testFramework": "mocha",
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "log"
+  ],
+  "author": "Bohemia Interactive",
+
+  "private": true,
+  "dependencies": {
+    "winston": "0.8.*"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "istanbul": "^0.4.3",
+    "chai": "*",
+    "mocha": "*"
+  }
+}
