@@ -28,11 +28,11 @@ var Logger = function () {
  * @returns {exports.DailyRotateFile}
  * @private
  */
-Logger.prototype._getFileTransport = function (level, fileNamePostfix) {
+Logger.prototype._getFileTransport = function (level, fileNamePostfix, fileExtension) {
     return new winston.transports.DailyRotateFile({
         level: level,
         filename: this.logsDirPathName + fileNamePostfix,
-        datePattern: '.yy-MM-dd.json',
+        datePattern: '.yy-MM-dd.' + fileExtension,
         message: '%l $e $m',
         subject: '%l $e $m',
         region: 'eu-west-1',
@@ -62,12 +62,12 @@ Logger.prototype.getInstance = function () {
 
     var fileLogger = new winston.Logger({
         transports: [
-            this._getFileTransport('error', 'error')
+            this._getFileTransport('error', 'error', 'log')
         ],
         exitOnError: false
     });
 
-    fileLogger.handleExceptions(this._getFileTransport('error', 'exception'));
+    fileLogger.handleExceptions(this._getFileTransport('error', 'exception', 'json'));
 
     fileLogger.extend(modifiedLogg);
 
