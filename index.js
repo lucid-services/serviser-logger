@@ -30,14 +30,14 @@ var Logger = function () {
 /**
  *
  * @param level
- * @param fileNamePostfix
+ * @param fileNamePrefix
  * @returns {exports.DailyRotateFile}
  * @private
  */
-Logger.prototype._getFileTransport = function (level, fileNamePostfix, fileExtension) {
+Logger.prototype._getFileTransport = function (level, fileNamePrefix, fileExtension) {
     return new winston.transports.DailyRotateFile({
         level: level,
-        filename: this.logsDirPathName + fileNamePostfix,
+        filename: this.logsDirPathName + fileNamePrefix,
         datePattern: '.yy-MM-dd.' + fileExtension,
         message: '%l $e $m',
         subject: '%l $e $m',
