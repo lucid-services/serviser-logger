@@ -19,6 +19,8 @@ var Logger = function () {
     //defaults
     this.logsDirPathName = process.cwd() + path.sep + this.LOGS_DIR_NAME + path.sep;
 
+    this.transports = [];
+
     if (process.env.LOGS_DIR != undefined && process.env.LOGS_DIR != null && process.env.LOGS_DIR.length > 0) {
         this.logsDirPathName = process.env.LOGS_DIR;
         if (!process.env.LOGS_DIR.endsWith(path.sep)) {
@@ -35,7 +37,7 @@ var Logger = function () {
  * @private
  */
 Logger.prototype._getFileTransport = function (level, fileNamePrefix, fileExtension) {
-    return new winston.transports.DailyRotateFile({
+    var transport = new winston.transports.DailyRotateFile({
         level: level,
         filename: this.logsDirPathName + fileNamePrefix,
         datePattern: '.yy-MM-dd.' + fileExtension,
@@ -49,7 +51,9 @@ Logger.prototype._getFileTransport = function (level, fileNamePrefix, fileExtens
         maxSize: 5242880, //5mb
         maxFiles: 2,
         colorize: false
-    })
+    });
+    this.transports[fileNamePrefix] = transport;
+    return transport;
 }
 
 /**
@@ -97,4 +101,4 @@ Logger.prototype.getInstance = function () {
     return modifiedLogg;
 }
 
-module.exports = new Logger().getInstance();
+module.exports = new Logger();

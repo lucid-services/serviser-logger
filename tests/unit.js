@@ -25,14 +25,28 @@ suite('Routes', function () {
 
     test('create logs dir if it does not exists', function(done){
         assert.isFalse(fs.existsSync(logsDir), 'Logs dir ' + logsDir + ' should not exists!');
-        var fileLog = require('../index');
+        var fileLog = require('../index').getInstance();
         assert.isTrue(fs.existsSync(logsDir), 'Logs dir ' + logsDir + ' should exists!');
         done();
     });
 
-    test('do log does not produce error', function(done){
+    test('return proper transport', function(done){
         var fileLog = require('../index');
-        fileLog.error('TEST');
+        var transport = fileLog._getFileTransport('error', 'pretest_', 'tst');
+        assert.equal(transport.level, 'error');
+        assert.equal(transport.filename, 'pretest_');
+        assert.equal(transport._basename, 'pretest_');
+        assert.equal(transport.dirname, logsDir.replace(/\\/g, '/'));
+        assert.equal(transport.datePattern, '.yy-MM-dd.tst');
+        done();
+    });
+
+    test('do log does not produce error', function(done){
+        var FileLog = require('../index');
+        var logTransports = FileLog.transports;
+        FileLog.getInstance().err('TEST1');
+        FileLog.getInstance().err('TEST2');
+        assert.equal(logTransports['error']._eventsCount, 2);
         done();
     });
 });

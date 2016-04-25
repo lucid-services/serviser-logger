@@ -17,7 +17,7 @@ Adding into project (`package.json`):
 
 Example use:
 ```js
-    var fileLog = require('bi-logger');
+    var fileLog = require('bi-logger').getInstance();
     //...do stuff
     fileLog.error('error');
 ```
@@ -25,8 +25,8 @@ Example use:
 Supported methods
 -----------------
 
-**loggerObject.error(_MESSAGE_)**
-Currently only registered log level. Every call `loggerObject.error(MESSAGE)` will create one row in logs directory in file `error.YY-MM-DD.log` file.
+**loggerObject.err(_MESSAGE_)**
+Customized error log level. Includes a trace with error message. Every call `loggerObject.error(MESSAGE)` will create one row in logs directory in file `error.YY-MM-DD.log` file.
 Logs are stored by default in 'logs/' dir in node root app dir.
 Path can be overridden using env. path LOGS_DIR like this:
 ```bash
@@ -34,6 +34,10 @@ export LOGS_DIR=/absolute/path/to/custom/logs/dir
 ```
 _Note: env. var should point to absolute location of logs directory.
  Example: /home/user1/dev/my_project01/logs_
+
+**loggerObject.error(_MESSAGE_)**
+Standard error log level handler.
+
 
  Module testing
  ---------------
