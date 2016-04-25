@@ -8,7 +8,8 @@
   },
   "testFramework": "mocha",
   "files": [
-    "index.js"
+    "index.js",
+    "libs/*.js"
   ],
   "keywords": [
     "log"
