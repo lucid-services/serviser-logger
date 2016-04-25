@@ -9,7 +9,7 @@
   "testFramework": "mocha",
   "files": [
     "index.js",
-    "libs/*.js"
+    "lib/*.js"
   ],
   "keywords": [
     "log"

@@ -4,5 +4,5 @@
  * (C) 2016 Bohemia Interactive
  *
  */
-var Logger = require('libs/logger');
+var Logger = require('./lib/logger');
 module.exports = new Logger().getInstance();
