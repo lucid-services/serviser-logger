@@ -25,13 +25,13 @@ suite('Routes', function () {
 
     test('create logs dir if it does not exists', function(done){
         assert.isFalse(fs.existsSync(logsDir), 'Logs dir ' + logsDir + ' should not exists!');
-        var fileLog = require('../lib/logger').getInstance();
+        var fileLog = require('../../lib/logger').getLoggerInstance();
         assert.isTrue(fs.existsSync(logsDir), 'Logs dir ' + logsDir + ' should exists!');
         done();
     });
 
     test('return proper transport', function(done){
-        var fileLog = require('../lib/logger');
+        var fileLog = require('../../lib/logger');
         var transport = fileLog._getFileTransport('error', 'pretest_', 'tst');
         assert.equal(transport.level, 'error');
         assert.equal(transport.filename, 'pretest_');
@@ -42,8 +42,8 @@ suite('Routes', function () {
     });
 
     test('do log does not produce error', function(done){
-        var FileLog = require('../lib/logger');
-        FileLog.getInstance().err('TEST1');
+        var FileLog = require('../../lib/logger');
+        FileLog.getLoggerInstance().err('TEST1');
         assert.include(FileLog._transports['error']._buffer[0][0], 'TEST1');
         done();
     });

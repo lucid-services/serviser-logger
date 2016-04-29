@@ -11,4 +11,4 @@ machine=$(hostname)
 if [[ $PWD != $projectPath ]]; then
     cd $projectPath
 fi
-istanbul cover node_modules/mocha/bin/_mocha -- --ui tdd tests
+istanbul cover node_modules/mocha/bin/_mocha -- --recursive --ui tdd -R spec tests

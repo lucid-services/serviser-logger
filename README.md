@@ -10,7 +10,7 @@ Adding into project (`package.json`):
 ```json
 {
   "dependencies": {
-    "bi-logger": "git+ssh://git@webdev-git.czupc.bistudio.com:juraj/logger.git"
+    "bi-logger": "git+ssh://git@webdev-git.czupc.bistudio.com:juraj/logger.git#master"
   }
 }
 ```
@@ -19,7 +19,7 @@ Example use:
 ```js
     var fileLog = require('bi-logger');
     //...do stuff
-    fileLog.error('error');
+    fileLog.err('error');
 ```
 
 Supported methods
