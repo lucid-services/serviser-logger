@@ -4,7 +4,7 @@
   "description": "handles default logging of errors/exceptions into log files",
   "main": "index.js",
   "scripts": {
-    "test": "tests.sh"
+    "unit-tests": "istanbul cover node_modules/mocha/bin/_mocha -- --recursive --ui tdd -R spec tests"
   },
   "testFramework": "mocha",
   "files": [
