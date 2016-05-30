@@ -24,6 +24,7 @@
   "devDependencies": {
     "istanbul": "^0.4.3",
     "chai": "*",
-    "mocha": "*"
+    "mocha": "*",
+    "process": "*"
   }
 }
