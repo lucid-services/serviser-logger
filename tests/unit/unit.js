@@ -43,6 +43,15 @@ suite('Routes', function () {
         })
     });
 
+    test('logs dir already exists', function(done){
+        fs.mkdir(logsDir, function(err) {
+            setTimeout(function() {
+                var filleLog = require('../../lib/logger').getLoggerInstance();
+            }, 200)
+            done()
+        })
+    })
+
     test('return proper transport', function(done){
         var isWin = /^win/.test(process.platform);
         
