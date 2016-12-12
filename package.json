@@ -16,7 +16,7 @@
   ],
   "author": "Bohemia Interactive",
 
-  "private": true,
+  "private": false,
   "dependencies": {
     "winston": "0.8.*"
   },
