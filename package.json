@@ -15,16 +15,19 @@
     "log"
   ],
   "author": "Bohemia Interactive",
-
   "private": false,
   "dependencies": {
-    "winston": "0.8.*"
+    "fluent-logger": "^2.4.0",
+    "lodash": "^4.16.2",
+    "winston": "^2.3.1",
+    "winston-daily-rotate-file": "^1.4.6"
   },
   "license": "MIT",
   "devDependencies": {
+    "chai": "^3.5.0",
     "istanbul": "^0.4.3",
-    "chai": "*",
-    "mocha": "*",
-    "process": "*"
+    "mocha": "^2.5.3",
+    "sinon": "^1.17.3",
+    "sinon-chai": "^2.8.0"
   }
 }
