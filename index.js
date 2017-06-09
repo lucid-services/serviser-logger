@@ -141,11 +141,15 @@ logger._getOrBuildFallbackLogger = function getOrBuildFallbackLogger(tag, index)
     if (index == -1 || logger._options.transports.length-1 <= index) {
         return console;
     } else {
-        return logger.loggers.add('fallback-logger-'+index, {
+        var newLogger = logger.loggers.add('fallback-logger-'+index, {
             transports: [
                 logger._buildTransport(tag, logger._options.transports[index+1], index+1)
             ]
         });
+
+        newLogger.emitErrs = false;
+
+        return newLogger;
     }
 };
 
@@ -186,6 +190,8 @@ logger.getOrBuildLogger = function getOrBuildLogger(name, createOptions) {
     }
 
     var newLogger = logger.loggers.add(name, options);
+
+    newLogger.emitErrs = false;
 
     if (createOptions && createOptions.levels) {
         newLogger.setLevels(_.assign({}, createOptions.levels));
