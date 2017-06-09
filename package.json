@@ -1,15 +1,14 @@
 {
   "name": "bi-logger",
   "version": "1.0.1",
-  "description": "handles default logging of errors/exceptions into log files",
+  "description": "wrapper around winston logger",
   "main": "index.js",
   "scripts": {
     "unit-tests": "istanbul cover node_modules/mocha/bin/_mocha -- --recursive --ui tdd -R spec tests"
   },
   "testFramework": "mocha",
   "files": [
-    "index.js",
-    "lib/*.js"
+    "index.js"
   ],
   "keywords": [
     "log"

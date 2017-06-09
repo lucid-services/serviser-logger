@@ -350,7 +350,7 @@ logger.buildFluentTransport = function buildFluentTransport(tagPostfix, options)
     transport.level = options.level;
     transport.sender._setupErrorHandler();
     transport.sender.on('connect', function() {
-        this._flushSendQueue();
+        transport.sender._flushSendQueue();
     });
 
     transport.on('error', function(err) {
