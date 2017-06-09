@@ -56,13 +56,27 @@ var logger = require('bi-logger');
     - The levels corresponds to a logger's methods eg. `logger.error()` & `logger.info` etc..
     - When transport's `level` option value equals eg. `error` - only `uncaughException` & `error` events will be logged. Other event will be ignored
 
-#### Logging
+#### Logging - usage
 
 ```javascript
+var logger = require('bi-logger');
+
+//if needed, reinitialize should be called once at app's initialization cycle
+//every time `reinitialize` is called, static `bi-logger` module is reconfigured
+logger.reinitialize({
+    transports: [
+        type: 'file',
+        dir: 'logs',
+        autocreate: true
+    ]
+});
+
+//somewhere in the app:
 var err = new Error('test');
 logger.error(err);
 
 logger.error('message', {meta: 'data'});
+logger.warn('message', {meta: 'data'});
 logger.info('message', {meta: 'data'});
 ```
 
