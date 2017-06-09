@@ -366,18 +366,20 @@ logger.buildFluentTransport = function buildFluentTransport(tagPostfix, options)
  * @param {Transport} transport - file transport
  */
 logger._ensureFSPathExists = function(path, transport) {
-    fs.stat(path, function (err, stat) {
-        if (stat && stat.isDirectory()) {
-            return;
+    var stat;
+    try {
+        stat = fs.statSync(path);
+
+        if (stat && !stat.isDirectory()) {
+            throw new Error(`${path} already exists and is NOT a dirrectory. Can not create log destination`);
+        }
+    } catch(e) {
+        if (e.code == 'ENOENT') {
+            return fs.mkdirSync(path);
         }
 
-        fs.mkdir(path, function (err) {
-            if (err) {
-                transport.emit('error', new Error(`Logs directory ${path} does not exist and can not be created.`));
-                transport.emit('error', err);
-            }
-        });
-    });
+        throw e;
+    }
 };
 
 //set default logger
