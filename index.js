@@ -284,6 +284,8 @@ logger.buildDailyFileTransport = function(filename, options) {
     var transportOptIndex = logger._options.transports.indexOf(options);
     var fallbackLogger = logger._getOrBuildFallbackLogger(filename, transportOptIndex);
 
+    transport.fallbackLogger = fallbackLogger;
+
     transport.on('error', function(err) {
         if (err instanceof Error) {
             fallbackLogger.error(err.message, err);
@@ -353,6 +355,7 @@ logger.buildFluentTransport = function buildFluentTransport(tagPostfix, options)
         transport.sender._flushSendQueue();
     });
 
+    transport.fallbackLogger = tranport.sender.internalLogger;
     transport.on('error', function(err) {
         this.sender.internalLogger.error(err.message, err);
     });
@@ -397,7 +400,7 @@ logger.reinitialize({
 
 //handle uncaughtExceptions
 process.on('uncaughtException', function(e) {
-    logger.uncaughtException(e.message, e, function(err) {
+    logger.uncaughtException(e, function(err) {
 
         if (err) {
             console.error(err);
