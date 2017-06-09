@@ -23,6 +23,7 @@ module.exports = logger;
  * overwrites default settings of the logger module, setups logging transports
  * according to provided options object
  *
+ * @public
  * @param {Object}        options
  * @param {Boolean}       [options.exitOnError=true]
  * @param {Array<Object>} options.transports
@@ -36,20 +37,12 @@ logger.reinitialize = function reinitialize(options) {
 
     if (Array.isArray(options.transports)) {
 
-        var transports = options.transports;
-        var defaultTransports = [];
-        var index = 0;
-
-        while( _.isPlainObject(transports[index])
-            && transports[index].priority == transports[0].priority
-        ) {
-            defaultTransports.push(logger._buildTransport('fault', transports[index], index));
-            index++;
-        }
+        var defaultTransports = logger._buildPrimaryTransports('fault');
 
         logger.configure({
             transports: defaultTransports,
-            rewriters: [errorTraceFormater]
+            rewriters: [errorTraceFormater],
+            filters: [errorMessageSanitizer]
         });
         logger.setLevels(logger._defaultLevels);
     }
@@ -57,6 +50,34 @@ logger.reinitialize = function reinitialize(options) {
     if (typeof options.exitOnError === 'boolean') {
         logger.exitOnError = options.exitOnError;
     }
+};
+
+/**
+ * @param {String} tag
+ * @param {Object} [transportOptions] - ovewrites defaults
+ * @return {Array<Transport>}
+ */
+logger._buildPrimaryTransports = function _buildPrimaryTransports(tag, transportOptions) {
+    if (typeof tag !== 'string' || !tag) {
+        throw new Error('`tag` argument must be valid string value');
+    }
+
+    var out = [];
+    var transports = (logger._options && logger._options.transports) || [];
+    var index = 0;
+    var tranport;
+
+    //trasnports are expected to be sorted by now (higher priority comes first)
+    while( _.isPlainObject(transports[index])
+        && transports[index].priority == transports[0].priority
+    ) {
+        var opt = _.assign({}, transports[index], transportOptions || {});
+        transport = logger._buildTransport(tag, opt, index);
+        out.push(transport);
+        index++;
+    }
+
+    return out;
 };
 
 /**
@@ -131,32 +152,47 @@ logger._getOrBuildFallbackLogger = function getOrBuildFallbackLogger(tag, index)
 /**
  * @public
  * @param {String} name - user defined logger name (key)
- * @param {String} type - file|fluentd
  * @param {Object} [createOptions] - used when a logger with the name does not exist yet and is to be created
+ * @param {String} [createOptions.type] - file|fluentd|console
  * @return {Logger}
  */
-logger.getOrBuildLogger = function getOrBuildLogger(name, type, createOptions) {
+logger.getOrBuildLogger = function getOrBuildLogger(name, createOptions) {
+    //logger.get | logger.add is the same function so it must be handled this way
+    if (logger.loggers.loggers[name]) {
+        return logger.loggers.get(name);
+    }
+
     var options = {transports: []};
     var index, transportOptions;
+    createOptions = createOptions || {};
 
-    if (!type || typeof type !== 'string') {
-        throw new Error('`type` arguments must be valid string identifier of supported logging Transport');
+    if (typeof createOptions.type === 'string' && createOptions.type) {
+        index = _.findIndex(logger._options.transports, function(val) {
+            return val.type === createOptions.type;
+        });
+
+        if (index === -1) {
+            throw new Error(`Transport: ${createOptions.type} not found`);
+        }
+        transportOptions = _.cloneDeep(logger._options.transports[index]);
+
+        if (createOptions) {
+            _.assign(transportOptions, createOptions);
+        }
+
+        options.transports.push(logger._buildTransport(name, transportOptions, index));
+    } else {
+        options.transports = logger._buildPrimaryTransports(name, createOptions);
     }
 
-    index = _.findIndex(logger._options.transports, function(val) {
-        return val.type === type;
-    });
+    var newLogger = logger.loggers.add(name, options);
 
-    if (index === -1) {
-        throw new Error(`Transport: ${type} not found`);
+    if (createOptions && createOptions.levels) {
+        newLogger.setLevels(_.assign({}, createOptions.levels));
     }
-    transportOptions = _.cloneDeep(logger._options.transports[index]);
 
-    if (createOptions) {
-        _.assign(transportOptions, createOptions);
-    }
-    options.transports.push(logger._buildTransport(name, transportOptions, index));
-    return logger.loggers.add(name, options);
+    return newLogger;
+
 };
 
 /**
@@ -299,13 +335,13 @@ logger.buildFluentTransport = function buildFluentTransport(tagPostfix, options)
     tag += '.' + tagPostfix; // eg. 'webdev-local.bi-depot.fault
 
     var transport =  new FluentTransport(tag, {
-        level             : options.level,
         internalLogger    : options.internalLogger || console,
         host              : options.host,
         port              : options.port,
         timeout           : options.timeout,
         reconnectInterval : options.reconnectInterval
     });
+    transport.level = options.level;
     transport.sender._setupErrorHandler();
     transport.sender.on('connect', function() {
         this._flushSendQueue();
@@ -365,6 +401,22 @@ process.on('uncaughtException', function(e) {
     });
 });
 
+
+/**
+ * @param {String} level
+ * @param {String} msg
+ * @param {Object} meta
+ *
+ * @return {undefined}
+ */
+function errorMessageSanitizer(level, msg, meta) {
+    if (!msg && meta.message && meta.trace) { //we are dealing with an Error log
+        msg = meta.message;
+        delete meta.message;
+    }
+    return msg;
+}
+
 /**
  * @param {String} level
  * @param {String} msg
@@ -378,6 +430,8 @@ function errorTraceFormater(level, msg, meta) {
         }
         out = out || {};
         out.trace = winston.exception.getTrace(meta);
+        out.message = meta.message;
     }
+
     return out || meta;
 }
