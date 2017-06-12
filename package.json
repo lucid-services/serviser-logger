@@ -1,30 +1,34 @@
 {
   "name": "bi-logger",
-  "version": "1.0.1",
-  "description": "handles default logging of errors/exceptions into log files",
+  "version": "2.0.0-alpha",
+  "description": "wrapper around winston logger",
   "main": "index.js",
   "scripts": {
-    "unit-tests": "istanbul cover node_modules/mocha/bin/_mocha -- --recursive --ui tdd -R spec tests"
+    "test": "mocha --ui bdd --colors --check-leaks -t 5000 --reporter spec 'tests/**/*.js'",
+    "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- --ui bdd -R spec 'tests/**/*.js' -t 5000"
   },
   "testFramework": "mocha",
   "files": [
-    "index.js",
-    "lib/*.js"
+    "index.js"
   ],
   "keywords": [
     "log"
   ],
   "author": "Bohemia Interactive",
-
   "private": false,
   "dependencies": {
-    "winston": "0.8.*"
+    "fluent-logger": "^2.4.0",
+    "lodash": "^4.16.2",
+    "winston": "^2.3.1",
+    "winston-daily-rotate-file": "^1.4.6"
   },
   "license": "MIT",
   "devDependencies": {
+    "chai": "^3.5.0",
     "istanbul": "^0.4.3",
-    "chai": "*",
-    "mocha": "*",
-    "process": "*"
+    "mocha": "^2.5.3",
+    "sinon": "^1.17.3",
+    "sinon-chai": "^2.8.0",
+    "tmp": "0.0.29"
   }
 }
