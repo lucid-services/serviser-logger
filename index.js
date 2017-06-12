@@ -2,7 +2,7 @@ var fs              = require('fs');
 var path            = require('path');
 var _               = require('lodash');
 var winston         = require('winston');
-var fluentd          = require('fluent-logger');
+var fluentd         = require('fluent-logger');
 var DailyRotateFile = require('winston-daily-rotate-file');
 
 var FluentTransport = fluentd.support.winstonTransport();
@@ -35,6 +35,12 @@ logger.reinitialize = function reinitialize(options) {
     options = logger._sanitizeOptions(options);
     logger._options = options;
 
+    Object.keys(logger.loggers.loggers).forEach(function(name) {
+        if (name.match(/^fallback-logger-\d+$/)) {
+            logger.loggers.close(name);
+        }
+    });
+
     if (Array.isArray(options.transports)) {
 
         var defaultTransports = logger._buildPrimaryTransports('fault');
@@ -65,7 +71,7 @@ logger._buildPrimaryTransports = function _buildPrimaryTransports(tag, transport
     var out = [];
     var transports = (logger._options && logger._options.transports) || [];
     var index = 0;
-    var tranport;
+    var transport;
 
     //trasnports are expected to be sorted by now (higher priority comes first)
     while( _.isPlainObject(transports[index])
@@ -162,7 +168,7 @@ logger._getOrBuildFallbackLogger = function getOrBuildFallbackLogger(tag, index)
  */
 logger.getOrBuildLogger = function getOrBuildLogger(name, createOptions) {
     //logger.get | logger.add is the same function so it must be handled this way
-    if (logger.loggers.loggers[name]) {
+    if (logger.loggers.has(name)) {
         return logger.loggers.get(name);
     }
 
@@ -191,8 +197,6 @@ logger.getOrBuildLogger = function getOrBuildLogger(name, createOptions) {
 
     var newLogger = logger.loggers.add(name, options);
 
-    newLogger.emitErrs = false;
-
     if (createOptions && createOptions.levels) {
         newLogger.setLevels(_.assign({}, createOptions.levels));
     }
@@ -217,16 +221,19 @@ logger._buildTransport = function buildTransport(tag, options, transportIndex) {
         transportIndex = -1;
     }
 
+    var fallbackLogger = logger._getOrBuildFallbackLogger(tag, transportIndex);
+
     switch (options.type) {
         case 'fluentd':
-            var fallbackLogger = logger._getOrBuildFallbackLogger(tag, transportIndex);
 
             transport = logger.buildFluentTransport(tag, _.assign({
                 internalLogger: fallbackLogger
             }, options));
             break;
         case 'file':
-            transport = logger.buildDailyFileTransport(tag, options);
+            transport = logger.buildDailyFileTransport(tag, _.assign({
+                internalLogger: fallbackLogger
+            }, options));
             break;
         case 'console':
             transport = new winston.transports.Console(options);
@@ -240,12 +247,13 @@ logger._buildTransport = function buildTransport(tag, options, transportIndex) {
 
 /**
  * @public
- * @param {String}  filename
- * @param {Object}  options
- * @param {String}  options.dir - logs dirrectory
- * @param {String}  [options.level] - maximum allowed level logging restriction
- * @param {Integer} [option.priority=Infinity] - 1 = highest priority
- * @param {Boolean} [options.autocreate=true] - whether to automatically create destination dirrectory if it does not exist
+ * @param {String}         filename
+ * @param {Object}         options
+ * @param {String}         options.dir - logs dirrectory
+ * @param {String}         [options.level] - maximum allowed level logging restriction
+ * @param {Integer}        [option.priority=Infinity] - 1 = highest priority
+ * @param {Boolean}        [options.autocreate=true] - whether to automatically create destination dirrectory if it does not exist
+ * @param {Logger|console} [options.internalLogger]
  *
  * @return {Transport}
  */
@@ -281,14 +289,11 @@ logger.buildDailyFileTransport = function(filename, options) {
         handleException : false
     });
 
-    var transportOptIndex = logger._options.transports.indexOf(options);
-    var fallbackLogger = logger._getOrBuildFallbackLogger(filename, transportOptIndex);
-
-    transport.fallbackLogger = fallbackLogger;
+    transport.fallbackLogger = options.internalLogger;
 
     transport.on('error', function(err) {
-        if (err instanceof Error) {
-            fallbackLogger.error(err.message, err);
+        if (err) {
+            this.fallbackLogger.error(err);
         }
     });
 
@@ -355,9 +360,9 @@ logger.buildFluentTransport = function buildFluentTransport(tagPostfix, options)
         transport.sender._flushSendQueue();
     });
 
-    transport.fallbackLogger = tranport.sender.internalLogger;
+    transport.fallbackLogger = transport.sender.internalLogger;
     transport.on('error', function(err) {
-        this.sender.internalLogger.error(err.message, err);
+        this.sender.internalLogger.error(err);
     });
 
     return transport;
