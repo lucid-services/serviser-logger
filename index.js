@@ -17,6 +17,7 @@ logger._defaultLevels = {
     verbose : 4
 };
 
+
 module.exports = logger;
 
 /**
@@ -439,14 +440,19 @@ function errorMessageSanitizer(level, msg, meta) {
  * @param {Object} meta
  */
 function errorTraceFormater(level, msg, meta) {
-    var out;
+    var out, errorConstructor;
     if (meta instanceof Error) {
-        if (typeof meta.toJSON === 'function') {
+        if (typeof meta.toLogger === 'function') {
+            out = meta.toLogger();
+        } else if (typeof meta.toJSON === 'function') {
             out = meta.toJSON();
         }
-        out = out || {};
-        out.trace = winston.exception.getTrace(meta);
-        out.message = meta.message;
+
+        errorConstructor = Object.getPrototypeOf(meta).constructor;
+        out              = out || {};
+        out.trace        = winston.exception.getTrace(meta);
+        out.name         = errorConstructor && errorConstructor.name;
+        out.message      = meta.message;
     }
 
     return out || meta;
