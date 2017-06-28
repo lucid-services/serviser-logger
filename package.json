@@ -1,6 +1,6 @@
 {
   "name": "bi-logger",
-  "version": "2.0.0-alpha",
+  "version": "2.0.0",
   "description": "wrapper around winston logger",
   "main": "index.js",
   "scripts": {
@@ -8,9 +8,6 @@
     "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- --ui bdd -R spec 'tests/**/*.js' -t 5000"
   },
   "testFramework": "mocha",
-  "files": [
-    "index.js"
-  ],
   "keywords": [
     "log"
   ],

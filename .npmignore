@@ -7,4 +7,4 @@
 README.md
 npm-debug.log
 coverage/
-tests/
+test.js
