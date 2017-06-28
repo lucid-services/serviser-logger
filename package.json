@@ -1,6 +1,6 @@
 {
   "name": "bi-logger",
-  "version": "2.0.0-alpha",
+  "version": "2.0.0",
   "description": "wrapper around winston logger",
   "main": "index.js",
   "scripts": {
