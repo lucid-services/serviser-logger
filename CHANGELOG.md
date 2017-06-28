@@ -1,5 +1,10 @@
 ## 2.0.0
 
+* [ADDED] support for `Error.prototype.toLogger`
+* [ADDED] Error constructor name to logged json object
+
+## 2.0.0-alpha
+
 * [REMOVED] custom `logger.err` method
 * [ADDED] support for `fluentd` & `console` transports
 * [ADDED] `getOrBuildLogger` & `reinitialize` public methods
