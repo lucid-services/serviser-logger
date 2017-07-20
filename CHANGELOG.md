@@ -1,4 +1,4 @@
-## FUTURE
+## 2.0.1
 
 * [FIXED] option determining whether json data written to the file (via DailyRotateFile transport) should be pretty printed or not, should be configurable
 
