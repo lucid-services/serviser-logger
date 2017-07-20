@@ -211,7 +211,7 @@ logger.getOrBuildLogger = function getOrBuildLogger(name, createOptions) {
  * @param {String} tag
  * @param {Object} options - transport options
  * @param {String} options.type - currently supported: file|fluentd
- * @param {Integer} [options.transportIndex]
+ * @param {Integer} [transportIndex]
  * @return {Transport}
  */
 logger._buildTransport = function buildTransport(tag, options, transportIndex) {
@@ -253,6 +253,7 @@ logger._buildTransport = function buildTransport(tag, options, transportIndex) {
  * @param {String}         options.dir - logs dirrectory
  * @param {String}         [options.level] - maximum allowed level logging restriction
  * @param {Integer}        [option.priority=Infinity] - 1 = highest priority
+ * @param {Boolean}        [options.json=false] - if false, data will be written in pretty printed format
  * @param {Boolean}        [options.autocreate=true] - whether to automatically create destination dirrectory if it does not exist
  * @param {Logger|console} [options.internalLogger]
  *
@@ -283,7 +284,7 @@ logger.buildDailyFileTransport = function(filename, options) {
         region      : 'eu-west-1',
         tailable    : true,
         prettyPrint : true,
-        json        : true,
+        json        : options.json,
         maxSize     : 5242880, //5mb
         maxFiles    : 2,
         colorize    : false,
