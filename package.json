@@ -7,6 +7,19 @@
     "test": "mocha --ui bdd --colors --check-leaks -t 5000 --reporter spec 'tests/**/*.js'",
     "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- --ui bdd -R spec 'tests/**/*.js' -t 5000"
   },
+  "contributors": [
+    "fogine",
+    "Juraj"
+  ],
+  "files": [
+      "index.js",
+      "CHANGELOG.md",
+      "README.md",
+      "tests"
+  ],
+  "engines": {
+      "node": ">=4.0.0"
+  },
   "testFramework": "mocha",
   "keywords": [
     "log"
@@ -19,7 +32,7 @@
     "winston": "^2.3.1",
     "winston-daily-rotate-file": "^1.4.6"
   },
-  "license": "MIT",
+  "license": "GPL-3.0",
   "devDependencies": {
     "chai": "^3.5.0",
     "istanbul": "^0.4.3",

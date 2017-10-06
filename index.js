@@ -60,6 +60,7 @@ logger.reinitialize = function reinitialize(options) {
 };
 
 /**
+ * @private
  * @param {String} tag
  * @param {Object} [transportOptions] - ovewrites defaults
  * @return {Array<Transport>}
