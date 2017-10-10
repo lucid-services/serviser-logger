@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/BohemiaInteractive/bi-logger.svg?branch=master)](https://travis-ci.org/BohemiaInteractive/bi-logger)  
 
 ```javascript
 var logger = require('bi-logger');
