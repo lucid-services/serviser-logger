@@ -1,4 +1,4 @@
-## FUTURE
+## 2.0.2
 
 * [FIXED] global variable leak due to a typo
 
