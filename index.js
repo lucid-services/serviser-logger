@@ -99,7 +99,7 @@ logger._sanitizeOptions = function(options) {
         exitOnError: true,
         transports: []
     };
-    opitons = _.assign(defaults, options);
+    options = _.assign(defaults, options);
 
     for (var i = 0, transport = null; i < options.transports.length; i++) {
         transport = options.transports[i];
