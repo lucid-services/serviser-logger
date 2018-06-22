@@ -14,8 +14,7 @@
   "files": [
       "index.js",
       "CHANGELOG.md",
-      "README.md",
-      "tests"
+      "README.md"
   ],
   "engines": {
       "node": ">=4.0.0"
