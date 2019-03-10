@@ -1,3 +1,7 @@
+## 2.0.4
+
+* [CHANGED] project renamed to `serviser-config`
+
 ## 2.0.3
 
 * [FIXED] dependent `fluent-logger` library broke compatibility since `2.8` release, make sure `v2.7` is always installed
