@@ -1,5 +1,5 @@
 {
-  "name": "bi-logger",
+  "name": "serviser-logger",
   "version": "2.0.3",
   "description": "wrapper around winston logger",
   "main": "index.js",
@@ -23,7 +23,7 @@
   "keywords": [
     "log"
   ],
-  "author": "Bohemia Interactive",
+  "author": "fogine",
   "private": false,
   "dependencies": {
     "fluent-logger": "2.7.0",

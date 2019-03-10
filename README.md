@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.org/BohemiaInteractive/bi-logger.svg?branch=master)](https://travis-ci.org/BohemiaInteractive/bi-logger)  
+[![Build Status](https://travis-ci.org/lucid-services/serviser-logger.svg?branch=master)](https://travis-ci.org/lucid-services/serviser-logger)  
 
 ```javascript
-var logger = require('bi-logger');
+var logger = require('serviser-logger');
 ```
 
 - Logger's behavior is configured via a config object (**Example 1**) provided to `logger.reinitialize` method.  
@@ -60,10 +60,10 @@ var logger = require('bi-logger');
 #### Logging - usage
 
 ```javascript
-var logger = require('bi-logger');
+var logger = require('serviser-logger');
 
 //if needed, reinitialize should be called once at app's initialization cycle
-//every time `reinitialize` is called, static `bi-logger` module is reconfigured
+//every time `reinitialize` is called, static `serviser-logger` module is reconfigured
 logger.reinitialize({
     transports: [
         type: 'file',
@@ -84,7 +84,7 @@ logger.info('message', {meta: 'data'});
 
 #### Custom loggers
 
-For far, we discussed only logging of "fault" events in application's life cycle.  
+So far, we discussed only logging of "fault" events in application's life cycle.  
 In case you need to log other types of data, eg. OAuth events, you want to create a new logger:  
 
 ```javascript
